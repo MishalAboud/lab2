@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-        <string name="text_love_android">J adore Android</string>
-        <string name="text_switch">Interrupteur</string>
-        <string name="text_press_button">Appuyer sur le bouton</string>
-        <string name="text_check_this_out">Regardez ça</string>
-        <string name="hint_edit_text">J adore Android</string>
-        <string name="next">Suivant</string>
-        <string name="lorem_ipsum">Lorem Ipsum</string>
-        <string name="previous">Précédent</string>
-        <string name="action_settings">Paramètres</string>
-        <string name="first_fragment_label">Premier Fragment</string>
-        <string name="second_fragment_label">Deuxième Fragment</string>
-        <string name="toast_message" />
+    <string name="enter_your_name">Laboratoire 3</string>
+    <string name="enter_name_hint">Votre Nom</string>
+    <string name="next_button">Suivant</string>
+    <string name="welcome_message_placeholder">Bienvenue %s !</string>
+    <string name="thank_you_button">Merci</string>
+    <string name="dont_call_me_button">Ne m appelle pas comme ça</string>
+    <string name="welcome_message">Bienvenue %s !</string>
+
+    <string name="next">Suivant</string>
+    <string name="lorem_ipsum">Lorem Ipsum</string>
+    <string name="previous">Précédent</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="first_fragment_label">Premier Fragment</string>
+    <string name="second_fragment_label">Deuxième Fragment</string>
+
 
 </resources>
 
