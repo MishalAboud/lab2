@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="enter_your_name">Laboratoire 3</string>
-    <string name="enter_name_hint">Votre Nom</string>
-    <string name="next_button">Suivant</string>
-    <string name="welcome_message_placeholder">Bienvenue %s !</string>
-    <string name="thank_you_button">Merci</string>
-    <string name="dont_call_me_button">Ne m appelle pas comme ça</string>
-    <string name="welcome_message">Bienvenue %s !</string>
+    <string name="app_name">Mon application de liste de tâches</string>
+    <string name="hint_todo">Saisir ici</string>
+    <string name="button_add">Ajouter</string>
+    <string name="switch_urgent">Urgent</string>
+    <string name="delete_confirmation_title">Voulez-vous supprimer ceci ?</string>
 
     <string name="next">Suivant</string>
     <string name="lorem_ipsum">Lorem Ipsum</string>

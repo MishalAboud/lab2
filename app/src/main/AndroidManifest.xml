@@ -12,8 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Lab2"
         tools:targetApi="31">
-
-        <!-- Remove one of the MainActivity declarations -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -24,12 +22,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <!-- Keep this declaration for NameActivity -->
         <activity
-            android:name=".NameActivity"
+            android:name=".TodoItem"
             android:exported="false" />
-
     </application>
 
 </manifest>
