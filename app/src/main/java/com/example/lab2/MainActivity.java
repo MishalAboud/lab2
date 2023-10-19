@@ -1,12 +1,14 @@
 package com.example.lab2;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SwitchCompat; // Import SwitchCompat
+import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.database.DatabaseUtils;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +44,20 @@ public class MainActivity extends AppCompatActivity {
         urgentSwitch = findViewById(R.id.urgentSwitch);
         addTodoButton = findViewById(R.id.addTodoButton);
 
+        // Load todos from the database
+        loadTodosFromDatabase();
+
         adapter = new TodoAdapter(todoList, this);
         todoListView.setAdapter(adapter);
 
         addTodoButton.setOnClickListener(v -> {
             String todoText = todoEditText.getText().toString();
             boolean isUrgent = urgentSwitch.isChecked();
+
+            // Add the todo to the database
+            addTodoToDatabase(todoText, isUrgent);
+
+            // Add the todo to the list
             todoList.add(new TodoItem(todoText, isUrgent));
             adapter.notifyDataSetChanged();
             todoEditText.getText().clear();
@@ -56,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
             builder.setTitle("Do you want to delete this?");
             builder.setMessage("The selected row is: " + position);
             builder.setPositiveButton("Yes", (dialog, which) -> {
+                // Delete the todo from the database
+                deleteTodoFromDatabase(position);
+
                 todoList.remove(position);
                 adapter.notifyDataSetChanged();
             });
@@ -63,7 +78,67 @@ public class MainActivity extends AppCompatActivity {
             builder.show();
             return true;
         });
+
+        // Print database information to the Log window for debugging
+        printCursor(getAllTodosFromDatabase());
     }
+
+    private void loadTodosFromDatabase() {
+        TodoDatabaseHelper dbHelper = new TodoDatabaseHelper(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = {TodoDatabaseHelper.COLUMN_TEXT, TodoDatabaseHelper.COLUMN_URGENT};
+        Cursor cursor = db.query(TodoDatabaseHelper.TABLE_TODO, projection, null, null, null, null, null);
+
+        if (cursor != null) {
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                String todoText = cursor.getString(0);
+                boolean isUrgent = cursor.getInt(1) == 1;
+                todoList.add(new TodoItem(todoText, isUrgent));
+                cursor.moveToNext();
+            }
+            cursor.close();
+        }
+
+        db.close();
+    }
+
+    private void addTodoToDatabase(String text, boolean isUrgent) {
+        TodoDatabaseHelper dbHelper = new TodoDatabaseHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(TodoDatabaseHelper.COLUMN_TEXT, text);
+        values.put(TodoDatabaseHelper.COLUMN_URGENT, isUrgent ? 1 : 0);
+
+        db.insert(TodoDatabaseHelper.TABLE_TODO, null, values);
+        db.close();
+    }
+
+    private void deleteTodoFromDatabase(int position) {
+        TodoDatabaseHelper dbHelper = new TodoDatabaseHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        // Assuming _id is the primary key starting from 1
+        db.delete(TodoDatabaseHelper.TABLE_TODO, TodoDatabaseHelper.COLUMN_ID + " = ?", new String[]{String.valueOf(position + 1)});
+        db.close();
+    }
+
+    private Cursor getAllTodosFromDatabase() {
+        TodoDatabaseHelper dbHelper = new TodoDatabaseHelper(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String[] projection = {TodoDatabaseHelper.COLUMN_ID, TodoDatabaseHelper.COLUMN_TEXT, TodoDatabaseHelper.COLUMN_URGENT};
+        return db.query(TodoDatabaseHelper.TABLE_TODO, projection, null, null, null, null, null);
+    }
+
+    private void printCursor(Cursor cursor) {
+        Log.d("Database Info", "Number of Results in Cursor: " + cursor.getCount());
+        Log.d("Database Info", "Cursor Data:\n" + DatabaseUtils.dumpCursorToString(cursor));
+        cursor.close();
+    }
+
 
     private static class TodoAdapter extends BaseAdapter {
         private final List<TodoItem> list;
