@@ -1,6 +1,6 @@
 <resources>
 
-    <string name="app_name">My To-Do App</string>
+    <string name="app_name">Lab 6</string>
     <string name="hint_todo">Type Here</string>
     <string name="button_add">Add</string>
     <string name="switch_urgent">Urgent</string>

@@ -4,41 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".MainActivity">
+    android:background="#000000">
 
-    <ListView
-        android:id="@+id/todoListView"
+    <ImageView
+        android:id="@+id/catImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/addTodoLayout"/>
+        android:scaleType="fitCenter" />
 
-    <LinearLayout
-        android:id="@+id/addTodoLayout"
+    <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/todoEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Type Here"
-            android:inputType="text"/>
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/urgentSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-
-
-        <Button
-            android:id="@+id/addTodoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add"/>
-    </LinearLayout>
+        android:layout_alignParentBottom="true" />
 </RelativeLayout>
