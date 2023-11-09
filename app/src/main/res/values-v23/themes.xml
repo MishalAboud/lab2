@@ -1,7 +1,7 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.AndroidLabs" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme attributes here -->
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <!-- Other theme attributes -->
     </style>
-ooo
-
 </resources>

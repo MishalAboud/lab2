@@ -1,148 +1,114 @@
 package com.example.lab2;
 
+
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.ui.AppBarConfiguration;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import com.example.lab2.databinding.ActivityMainBinding;
+import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    ListView characterListView;
-    CharacterListAdapter characterAdapter;
-    List<String> characterNames = new ArrayList<>();
+    private AppBarConfiguration mAppBarConfiguration;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Set the layout
         setContentView(R.layout.activity_main);
 
-        characterListView = findViewById(R.id.characterListView);
-        characterAdapter = new CharacterListAdapter(this, characterNames);
-        characterListView.setAdapter(characterAdapter);
+        // Find the Toolbar by its ID
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        characterListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get the selected character name
-                String characterName = characterNames.get(position);
 
-                // Get the corresponding character's details from the API response
-                // You need to add logic to retrieve the height and mass here
-                String height = "unknown"; // Replace with the actual height from the API
-                String mass = "unknown";   // Replace with the actual mass from the API
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-                if (findViewById(R.id.frameLayout) == null) {
-                    // Phone: Start the EmptyActivity with the selected character name
-                    Intent intent = new Intent(MainActivity.this, EmptyActivity.class);
-                    intent.putExtra("characterName", characterName);
-                    intent.putExtra("height", height); // Pass height to the intent
-                    intent.putExtra("mass", mass);     // Pass mass to the intent
-                    startActivity(intent);
-                } else {
-                    // Tablet: Replace the DetailsFragment with the selected character name
-                    DetailsFragment detailsFragment = DetailsFragment.newInstance(characterName, height, mass);
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.frameLayout, detailsFragment)
-                            .commit();
-                }
+        setSupportActionBar(binding.toolbar);
+
+        DrawerLayout drawer = binding.drawerLayout;
+        NavigationView navigationView = binding.navView;
+
+        mAppBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                .setDrawerLayout(drawer)
+                .build();
+
+        // Set a listener for navigation item clicks
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.menu_item_home) {
+                // Handle the "Home" menu item
+                navigateToMainActivity();
+            } else if (id == R.id.menu_item_dad_joke) {
+                // Handle the "Dad Joke" menu item
+                navigateToDadJokeActivity();
+            } else if (id == R.id.menu_item_exit) {
+                // Handle the "Exit" menu item
+                finishAffinity(); // Close all activities and exit the app
             }
+            drawer.closeDrawers(); // Close the navigation drawer
+            return true;
         });
-
-        FetchStarWarsCharactersTask task = new FetchStarWarsCharactersTask();
-        task.execute();
     }
 
-    private class FetchStarWarsCharactersTask extends AsyncTask<Void, Void, List<String>> {
-        @Override
-        protected List<String> doInBackground(Void... params) {
-            String apiUrl = "https://swapi.dev/api/people/?format=json";
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
 
-            List<String> characterNames = new ArrayList<>();
 
-            try {
-                // Perform the API request and store the response in a String
-                URL url = new URL(apiUrl);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-
-                int responseCode = connection.getResponseCode();
-
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    StringBuilder response = new StringBuilder();
-                    String line;
-
-                    while ((line = reader.readLine()) != null) {
-                        response.append(line);
-                    }
-
-                    reader.close();
-
-                    // Parse the JSON response to extract character names
-                    JSONObject data = new JSONObject(response.toString());
-                    JSONArray characters = data.getJSONArray("results");
-
-                    for (int i = 0; i < characters.length(); i++) {
-                        JSONObject character = characters.getJSONObject(i);
-                        String name = character.getString("name");
-                        characterNames.add(name);
-                    }
-                } else {
-                    // Handle API request error - show a toast message
-                    runOnUiThread(() -> Toast.makeText(MainActivity.this, "API request failed", Toast.LENGTH_SHORT).show());
-                }
-            } catch (IOException | JSONException e) {
-                e.printStackTrace();
-                // Handle exceptions - show a toast message
-                runOnUiThread(() -> Toast.makeText(MainActivity.this, "An error occurred", Toast.LENGTH_SHORT).show());
-            }
-
-            return characterNames;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_item_1) {
+            // Handle menu item 1
+            Toast.makeText(this, "You clicked on item 1", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (id == R.id.menu_item_2) {
+            // Handle menu item 2
+            Toast.makeText(this, "You clicked on item 2", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (id == R.id.menu_item_dad_joke) {
+            // Handle menu item "Dad Joke"
+            // Start the Dad Joke activity here
+            Intent intent = new Intent(this, DadJokeActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.menu_item_exit) {
+            // Handle menu item "Exit"
+            // Finish the current activity to shut down the app
+            finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
+    }
 
-        @Override
-        protected void onPostExecute(List<String> result) {
-            if (result != null) {
-                characterNames.addAll(result);
-                characterAdapter.notifyDataSetChanged();
-            }
 
-            if (result != null && result.size() > 0) {
-                String selectedCharacterName = result.get(0); // Assuming the first character in the list is selected
 
-                // Find the selected character in the API response and extract height and mass
-                for (String characterInfo : result) {
-                    try {
-                        JSONObject character = new JSONObject(characterInfo);
-                        if (selectedCharacterName.equals(character.getString("name"))) {
-                            String height = character.getString("height");
-                            String mass = character.getString("mass");
-
-                            // Now you have the actual "height" and "mass" values
-                            // Pass them to the intent if needed
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        // Handle JSON parsing errors
-                    }
-                }
-            }
+    // Helper method to navigate to the MainActivity
+    private void navigateToMainActivity() {
+        // Start the MainActivity if not already there
+        if (!(this instanceof MainActivity)) {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
+    }
+
+    // Helper method to navigate to the DadJokeActivity
+    private void navigateToDadJokeActivity() {
+        Intent intent = new Intent(this, DadJokeActivity.class);
+        startActivity(intent);
     }
 }

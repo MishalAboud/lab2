@@ -1,0 +1,16 @@
+<!-- res/menu/drawer_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:title="Home"
+            android:icon="@drawable/ic_home" />
+        <item
+            android:id="@+id/nav_dad_joke"
+            android:title="Dad Joke"
+            android:icon="@drawable/ic_dad_joke" />
+        <item
+            android:id="@+id/nav_exit"
+            android:title="Exit" />
+    </group>
+</menu>
